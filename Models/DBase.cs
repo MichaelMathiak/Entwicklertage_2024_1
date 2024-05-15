@@ -5,6 +5,7 @@ using System.Web;
 using System.Data.SqlClient;
 using System.Data.Entity;
 using System.Data.SQLite;
+using System.IO;
 
 namespace Entwicklertage_2024_1.Models
 {
@@ -24,8 +25,15 @@ namespace Entwicklertage_2024_1.Models
 
             SQLiteConnection sqlite_conn;
             // Create a new database connection:
-            sqlite_conn = new SQLiteConnection(@"Data Source=C:\Entwicklertage\2024_1\entwicklertage24-main\database.db; Version = 3;");
-         // Open the connection:
+            
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string dbPath = Path.Combine(baseDir, "database.db");
+            var sqlite_connectionString = $@"Data Source={dbPath}; Version = 3;";
+            
+            
+            sqlite_conn = new SQLiteConnection(sqlite_connectionString);
+            
+            // Open the connection:
         
                 sqlite_conn.Open();
 
