@@ -148,6 +148,8 @@ namespace Entwicklertage_2024_1.Models
                 item.ZeitInMinuten = "Kein Ziel gefunden";
                 item.VonHaltestelle = String.Empty;
                 item.VonHaltestelle = String.Empty;
+
+                AnzeigeDatan_Transfers.Add(item);
                 return;
             }
             
@@ -168,7 +170,8 @@ namespace Entwicklertage_2024_1.Models
 
         public void Lade_Anzeigedaten_Transfers()
         {
-            AnzeigeDatan_Transfers = new List<Anzeigedatan>();
+            AnzeigeDatan_Transfers.Clear();
+            
             SQLiteCommand cmd;
             SQLiteDataReader dr;
             var sqlite_conn = new SQLiteConnection(sqLiteConnection);
