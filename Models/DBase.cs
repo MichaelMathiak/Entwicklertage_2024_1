@@ -1,35 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Web;
 using System.Data.SqlClient;
 using System.Data.Entity;
 using System.Data.SQLite;
 using System.IO;
+using System.Web.WebSockets;
+using Antlr.Runtime.Misc;
+using Microsoft.Ajax.Utilities;
 
 namespace Entwicklertage_2024_1.Models
 {
     public class DBase
     {
+        
+        private List<Transfers> transferList { get; set; }
+        private List<Transfers> availableStops { get; set; }
+        
+
+        private static string baseDIr = AppDomain.CurrentDomain.BaseDirectory;
+        private static string dbPath = Path.Combine(baseDIr, "database.db");
+        private string sqLiteConnection = $@"Data Source={dbPath}; Version = 3;";
+        private string _selectedEnd { get; set; }
+        
         public Dictionary<string, string> Haltestellen()
         {
             var dictionary = new Dictionary<string, string>();
             SQLiteCommand cmd;
             SQLiteDataReader dr;
             string cmd_txt;
-            ///* string con_str = @"D*/ata Source=(localdb)\mssqllocaldb;AttachDbFilename=C:\Entwicklertage\2024_1\entwicklertage24-main\database.db;Integrated Security=True;Connect Timeout=30";
-            //string con_str = @"Server=10.2.39.225\HCAPPS;Database=CT-Auspacker;user id=hcit;password=hcit;Integrated Security=false; persist security info=false;";
 
 
             SQLiteConnection sqlite_conn;
             // Create a new database connection:
 
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            string dbPath = Path.Combine(baseDir, "database.db");
-            var sqlite_connectionString = $@"Data Source={dbPath}; Version = 3;";
-
-
-            sqlite_conn = new SQLiteConnection(sqlite_connectionString);
+            sqlite_conn = new SQLiteConnection(sqLiteConnection);
 
             // Open the connection:
 
@@ -61,12 +68,11 @@ namespace Entwicklertage_2024_1.Models
 
         public void HandleStartZiel(IEnumerable<KeyValuePair<string, string>> selectedStart, IEnumerable<KeyValuePair<string, string>> selectedEnd)
         {
-            // do stuff
-            
-            // startpunkt -> jeden zugehörigen nextStop finden (transfers)
+            transferList = new List<Transfers>();
+            availableStops = new List<Transfers>();
+            _selectedEnd = selectedEnd.First().Key;
             
             #region SQL
-            var sqlDict = new Dictionary<string, string>();
             SQLiteCommand sqLiteCommand;
             SQLiteDataReader dr;
             string sqlCommand;
@@ -82,7 +88,7 @@ namespace Entwicklertage_2024_1.Models
             
             sqlite_conn.Open();
 
-            sqlCommand = "select to_stop_id, min_transfer_time from transfers where from_stop_id = '" +
+            sqlCommand = "select from_stop_id, to_stop_id, min_transfer_time from transfers where from_stop_id = '" +
                          selectedStart.First().Key + "' order by min_transfer_time";
             
             sqLiteCommand = new SQLiteCommand(sqlCommand, sqlite_conn);
@@ -92,7 +98,13 @@ namespace Entwicklertage_2024_1.Models
                 dr = sqLiteCommand.ExecuteReader();
                 while (dr.Read())
                 {
-                    sqlDict.Add(dr.GetValue(0).ToString(), dr.GetValue(1).ToString());
+                    var item = new Transfers();
+
+                    item.FromStopId = dr.GetValue(0).ToString();
+                    item.ToStopId = dr.GetValue(1).ToString();
+                    item.MinTransferTime = dr.GetValue(2).ToString();
+                                        
+                    transferList.Add(item);
                 }
             }
             catch (SqlException e)
@@ -100,23 +112,77 @@ namespace Entwicklertage_2024_1.Models
                 Console.WriteLine(e);
                 throw;
             }
-            
             #endregion
             
-            
+            if(transferList.Count == 0)
+            {
+                // keine Verbindung gefunden
+                return;
+            }
 
-            
+            foreach (var stop in transferList)
+            {
+                RekursiverAufruf(stop);
+            }
             
         }
 
-        public string RekursiverAufruf(string startPunkt)
+        private string RekursiverAufruf(Transfers transfer)
         {
-            string endPunkt = "";
+            var newTransfers = new List<Transfers>();
+
+            if (transfer.ToStopId.Equals(_selectedEnd))
+            {
+                // do stuff
+            }
+            
+            SQLiteCommand cmd;
+            SQLiteDataReader dr;
+            string query = "select from_stop_id, to_stop_id, min_transfer_time from transfers where from_stop_id = '" +
+                           transfer.ToStopId + "' order by min_transfer_time";
 
             
-            // do stuff
+            var sqlite_conn = new SQLiteConnection(sqLiteConnection);
+
+            sqlite_conn.Open();
             
-            return RekursiverAufruf(endPunkt);
+            cmd = new SQLiteCommand(query, sqlite_conn);
+            
+            try
+            {
+                dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    var item = new Transfers();
+                    item.FromStopId = dr.GetValue(0).ToString();
+                    item.ToStopId = dr.GetValue(1).ToString();
+                    item.MinTransferTime = dr.GetValue(2).ToString();
+                    
+                    newTransfers.Add(item);
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            if (newTransfers.Count > 0)
+            {
+                foreach (var trans in newTransfers)
+                {
+                    RekursiverAufruf(trans);
+                }
+            }
+
+            return null;
         }
+    }
+
+    public class Transfers
+    {
+        public string FromStopId { get; set; }
+        public string ToStopId { get; set; }
+        public string MinTransferTime { get; set; }
     }
 }
