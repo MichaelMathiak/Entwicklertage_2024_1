@@ -126,7 +126,7 @@ namespace Entwicklertage_2024_1.Models
             
             foreach (var stop in transferList)
             {
-                RekursiverAufruf(stop);
+                // RekursiverAufruf(stop);
             }
             
         }
