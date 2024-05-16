@@ -170,7 +170,7 @@ namespace Entwicklertage_2024_1.Models
 
         public void Lade_Anzeigedaten_Transfers()
         {
-            AnzeigeDatan_Transfers.Clear();
+            AnzeigeDatan_Transfers = new List<Anzeigedatan>();
             
             SQLiteCommand cmd;
             SQLiteDataReader dr;
