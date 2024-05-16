@@ -11,9 +11,9 @@ namespace Entwicklertage_2024_1.Models
 {
     public class DBase
     {
-        public List<String> Haltestellen()
+        public Dictionary<string, string> Haltestellen()
         {
-            List<String> list = new List<String>();
+            var dictionary = new Dictionary<string, string>();
             SQLiteCommand cmd;
             SQLiteDataReader dr;
             string cmd_txt;
@@ -35,7 +35,7 @@ namespace Entwicklertage_2024_1.Models
 
             sqlite_conn.Open();
 
-            cmd_txt = "SELECT DISTINCT stop_name from stops order by stop_name";
+            cmd_txt = "SELECT DISTINCT stop_id, stop_name from stops order by stop_name";
 
             //con = new SqlConnection(con_str);
             //con.Open();
@@ -46,7 +46,7 @@ namespace Entwicklertage_2024_1.Models
                 dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    list.Add(dr.GetValue(0).ToString());
+                    dictionary.Add(dr.GetValue(0).ToString(), dr.GetValue(1).ToString());
                 }
             }
             catch (SqlException e)
@@ -55,8 +55,23 @@ namespace Entwicklertage_2024_1.Models
                 throw;
             }
             
-            ;
-            return list;
+            return dictionary;
+        }
+
+
+        public void HandleStartZiel()
+        {
+            
+        }
+
+        public string RekursiverAufruf(string startPunkt)
+        {
+            string endPunkt = "";
+
+            
+            // do stuff
+            
+            return RekursiverAufruf(endPunkt);
         }
     }
 }

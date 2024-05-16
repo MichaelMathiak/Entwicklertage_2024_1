@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entwicklertage_2024_1", "Entwicklertage_2024_1.csproj", "{896F79C9-79E3-4DE8-8C0C-DDAF9C1B8B57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AStar", "AStar\AStar\AStar.csproj", "{F31D5E92-6A1D-4C09-915B-B02FAC3F974B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{896F79C9-79E3-4DE8-8C0C-DDAF9C1B8B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{896F79C9-79E3-4DE8-8C0C-DDAF9C1B8B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{896F79C9-79E3-4DE8-8C0C-DDAF9C1B8B57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F31D5E92-6A1D-4C09-915B-B02FAC3F974B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F31D5E92-6A1D-4C09-915B-B02FAC3F974B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F31D5E92-6A1D-4C09-915B-B02FAC3F974B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F31D5E92-6A1D-4C09-915B-B02FAC3F974B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

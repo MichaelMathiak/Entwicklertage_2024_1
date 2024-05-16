@@ -11,32 +11,29 @@ namespace Entwicklertage_2024_1
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
+        private Dictionary<string, string> verbindungsDict { get; set; }
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             DBase dBase = new DBase();
-            List<string> LHaltestellen = new List<string>();
+            
             if (!IsPostBack)
             {
-                LHaltestellen = dBase.Haltestellen();
+                verbindungsDict = dBase.Haltestellen();
                 DropDownList1.Items.Clear();
                 DropDownList2.Items.Clear();
-                for (int i = 0; i < LHaltestellen.Count; i++)
+                foreach (var element in verbindungsDict)
                 {
-                    DropDownList1.Items.Add(LHaltestellen[i]);
-                    DropDownList2.Items.Add(LHaltestellen[i]);
+                    DropDownList1.Items.Add(element.Value);
+                    DropDownList2.Items.Add(element.Value);
                 }
-                
-
             }
         }
 
         protected void BtnSuchen_Click(object sender, EventArgs e)
         {
-            if (!(DropDownList1.Text == DropDownList2.Text))
-                    {
-                //Verbindung suchen und ausgeben
-                TextBox1.Text = "Verbindungen!";
-            }
+            var dBase = new DBase();
+            
             
         }
     }
