@@ -33,12 +33,15 @@ namespace Entwicklertage_2024_1
         protected void BtnSuchen_Click(object sender, EventArgs e)
         {
             var dBase = new DBase();
-            
+            int z;
             var selectedStart = verbindungsDict.Where(x => x.Value.Equals(DropDownList1.SelectedItem.Text));
             var selectedEnd = verbindungsDict.Where(x => x.Value.Equals(DropDownList2.SelectedItem.Text));
             
             dBase.HandleStartZiel(selectedStart, selectedEnd);
-            
+
+            GridView1.DataSource = DBase.AnzeigeDatan_Transfers;
+            GridView1.Rows.clear();
+            z = GridView1.Rows.add;
         }
     }
 }
