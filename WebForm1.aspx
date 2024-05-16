@@ -15,7 +15,7 @@
         </div>
 
         <div class="body">
-            Bitte wählen: <br> <br>
+            Bitte wählen: <br><br>
             Bahnhof / Haltestelle: <br>
             <asp:DropDownList ID="DropDownList1" runat="server" CssClass="listbox"></asp:DropDownList> <br> <br>
             Endstation: <br> 
