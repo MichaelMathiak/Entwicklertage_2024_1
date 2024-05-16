@@ -16,16 +16,16 @@ namespace Entwicklertage_2024_1
         protected void Page_Load(object sender, EventArgs e)
         {
             DBase dBase = new DBase();
-            
+            verbindungsDict = dBase.Haltestellen();
+            var distinctDict = verbindungsDict.Values.Distinct();
             if (!IsPostBack)
             {
-                verbindungsDict = dBase.Haltestellen();
                 DropDownList1.Items.Clear();
                 DropDownList2.Items.Clear();
-                foreach (var element in verbindungsDict)
+                foreach (var element in distinctDict)
                 {
-                    DropDownList1.Items.Add(element.Value);
-                    DropDownList2.Items.Add(element.Value);
+                    DropDownList1.Items.Add(element);
+                    DropDownList2.Items.Add(element);
                 }
             }
         }
@@ -34,6 +34,10 @@ namespace Entwicklertage_2024_1
         {
             var dBase = new DBase();
             
+            var selectedStart = verbindungsDict.Where(x => x.Value.Equals(DropDownList1.SelectedItem.Text));
+            var selectedEnd = verbindungsDict.Where(x => x.Value.Equals(DropDownList2.SelectedItem.Text));
+            
+            dBase.HandleStartZiel(selectedStart, selectedEnd);
             
         }
     }

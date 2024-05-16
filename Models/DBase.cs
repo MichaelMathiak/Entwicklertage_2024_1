@@ -59,8 +59,53 @@ namespace Entwicklertage_2024_1.Models
         }
 
 
-        public void HandleStartZiel()
+        public void HandleStartZiel(IEnumerable<KeyValuePair<string, string>> selectedStart, IEnumerable<KeyValuePair<string, string>> selectedEnd)
         {
+            // do stuff
+            
+            // startpunkt -> jeden zugehörigen nextStop finden (transfers)
+            
+            #region SQL
+            var sqlDict = new Dictionary<string, string>();
+            SQLiteCommand sqLiteCommand;
+            SQLiteDataReader dr;
+            string sqlCommand;
+            
+            SQLiteConnection sqlite_conn;
+            
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string dbPath = Path.Combine(baseDir, "database.db");
+            var sqlite_connectionString = $@"Data Source={dbPath}; Version = 3;";
+
+
+            sqlite_conn = new SQLiteConnection(sqlite_connectionString);
+            
+            sqlite_conn.Open();
+
+            sqlCommand = "select to_stop_id, min_transfer_time from transfers where from_stop_id = '" +
+                         selectedStart.First().Key + "' order by min_transfer_time";
+            
+            sqLiteCommand = new SQLiteCommand(sqlCommand, sqlite_conn);
+            
+            try
+            {
+                dr = sqLiteCommand.ExecuteReader();
+                while (dr.Read())
+                {
+                    sqlDict.Add(dr.GetValue(0).ToString(), dr.GetValue(1).ToString());
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            #endregion
+            
+            
+
+            
             
         }
 
