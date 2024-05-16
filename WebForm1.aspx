@@ -18,7 +18,7 @@
             Bitte wählen: <br> <br>
             Bahnhof / Haltestelle: <br>
             <asp:DropDownList ID="DropDownList1" runat="server" CssClass="listbox"></asp:DropDownList> <br> <br>
-            Endstation: <br> <br>
+            Endstation: <br> 
             <asp:DropDownList ID="DropDownList2" runat="server" CssClass="listbox"></asp:DropDownList> <br> <br>
             <asp:Button ID="Button1" runat="server" Text="Suchen" CssClass="searchbox" onclick="BtnSuchen_Click"/> <br> <br> <br> <br>
             <p>Ihre Route:</p> <!-- Änderung hier -->
