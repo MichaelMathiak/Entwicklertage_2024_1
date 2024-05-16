@@ -145,7 +145,7 @@ namespace Entwicklertage_2024_1.Models
             {
                 SQLiteCommand cmd;
                 SQLiteDataReader dr;
-                var query = "select (select stop_name from stops where stop_id = '"+transfer.FromStopId+"') as VonHaltestelle, (select stop_name from stops where stop_id = '"+transfer.ToStopId+"') as BisHaltestelle from stops";
+                var query = "select distinct (select stop_name from stops where stop_id = '"+transfer.FromStopId+"') as VonHaltestelle, (select stop_name from stops where stop_id = '"+transfer.ToStopId+"') as BisHaltestelle from stops";
 
             
                 var sqlite_conn = new SQLiteConnection(sqLiteConnection);
