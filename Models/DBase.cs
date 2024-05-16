@@ -16,7 +16,7 @@ namespace Entwicklertage_2024_1.Models
     public class DBase
     {
         
-        public List<Anzeigedatan> AnzeigeDatan_Transfers { get; set; }
+        public static List<Anzeigedatan> AnzeigeDatan_Transfers { get; set; }
         
         private List<Transfers> transferList { get; set; }
         private List<Transfers> availableStops { get; set; }
@@ -123,63 +123,18 @@ namespace Entwicklertage_2024_1.Models
             }
             
             Lade_Anzeigedaten_Transfers();
-            
-            foreach (var stop in transferList)
-            {
-                // RekursiverAufruf(stop);
-            }
-            
+
+           //  Algo(transferList);
         }
 
-        private string RekursiverAufruf(Transfers transfer)
+        private string Algo(List<Transfers> transferList)
         {
-            var newTransfers = new List<Transfers>();
-
-            if (transfer.ToStopId.Equals(_selectedEnd))
+            while (transferList.Count > 0)
             {
-                // do stuff
-            }
-            
-            SQLiteCommand cmd;
-            SQLiteDataReader dr;
-            string query = "select from_stop_id, to_stop_id, min_transfer_time from transfers where from_stop_id = '" +
-                           transfer.ToStopId + "' order by min_transfer_time";
-
-            
-            var sqlite_conn = new SQLiteConnection(sqLiteConnection);
-
-            sqlite_conn.Open();
-            
-            cmd = new SQLiteCommand(query, sqlite_conn);
-            
-            try
-            {
-                dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    var item = new Transfers();
-                    item.FromStopId = dr.GetValue(0).ToString();
-                    item.ToStopId = dr.GetValue(1).ToString();
-                    item.MinTransferTime = dr.GetValue(2).ToString();
-                    
-                    newTransfers.Add(item);
-                }
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine(e);
-                throw;
+                
             }
 
-            if (newTransfers.Count > 0)
-            {
-                foreach (var trans in newTransfers)
-                {
-                    RekursiverAufruf(trans);
-                }
-            }
-
-            return null;
+            return "null";
         }
 
         public void Lade_Anzeigedaten_Transfers()
