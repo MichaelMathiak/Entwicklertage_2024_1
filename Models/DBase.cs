@@ -114,11 +114,40 @@ namespace Entwicklertage_2024_1.Models
                 Console.WriteLine(e);
                 throw;
             }
+
+            sqlCommand = "select from_stop_id, to_stop_id, min_transfer_time from transfers where from_stop_id = '" +
+                         selectedEnd.First().Key + "' order by min_transfer_time";
+            
+            sqLiteCommand = new SQLiteCommand(sqlCommand, sqlite_conn);
+            
+            try
+            {
+                dr = sqLiteCommand.ExecuteReader();
+                while (dr.Read())
+                {
+                    var item = new Transfers();
+
+                    item.FromStopId = dr.GetValue(0).ToString();
+                    item.ToStopId = dr.GetValue(1).ToString();
+                    item.MinTransferTime = dr.GetValue(2).ToString();
+                                        
+                    transferList.Add(item);
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            sqlite_conn.Close();
             #endregion
             
             if(transferList.Count == 0)
             {
-                // keine Verbindung gefunden
+                Anzeigedatan item = new Anzeigedatan();
+                item.ZeitInMinuten = "Kein Ziel gefunden";
+                item.VonHaltestelle = String.Empty;
+                item.VonHaltestelle = String.Empty;
                 return;
             }
             
@@ -140,17 +169,16 @@ namespace Entwicklertage_2024_1.Models
         public void Lade_Anzeigedaten_Transfers()
         {
             AnzeigeDatan_Transfers = new List<Anzeigedatan>();
+            SQLiteCommand cmd;
+            SQLiteDataReader dr;
+            var sqlite_conn = new SQLiteConnection(sqLiteConnection);
+            sqlite_conn.Open();
 
             foreach (var transfer in transferList)
             {
-                SQLiteCommand cmd;
-                SQLiteDataReader dr;
-                var query = "select distinct (select stop_name from stops where stop_id = '"+transfer.FromStopId+"') as VonHaltestelle, (select stop_name from stops where stop_id = '"+transfer.ToStopId+"') as BisHaltestelle from stops";
-
-            
-                var sqlite_conn = new SQLiteConnection(sqLiteConnection);
-
-                sqlite_conn.Open();
+                
+                var query = "select distinct (select stop_name from stops where stop_id = '"+transfer.FromStopId+"') as VonHaltestelle, " +
+                            "(select stop_name from stops where stop_id = '"+transfer.ToStopId+"') as BisHaltestelle from stops";
             
                 cmd = new SQLiteCommand(query, sqlite_conn);
             
