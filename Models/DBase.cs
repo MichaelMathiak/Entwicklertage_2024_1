@@ -16,7 +16,7 @@ namespace Entwicklertage_2024_1.Models
     public class DBase
     {
         
-        public List<Transfers> AnzeigeDatan_Transfers { get; set; }
+        public List<Anzeigedatan> AnzeigeDatan_Transfers { get; set; }
         
         private List<Transfers> transferList { get; set; }
         private List<Transfers> availableStops { get; set; }
@@ -121,9 +121,9 @@ namespace Entwicklertage_2024_1.Models
                 // keine Verbindung gefunden
                 return;
             }
-
-            AnzeigeDatan_Transfers = transferList;
-
+            
+            Lade_Anzeigedaten_Transfers();
+            
             foreach (var stop in transferList)
             {
                 RekursiverAufruf(stop);
@@ -181,6 +181,44 @@ namespace Entwicklertage_2024_1.Models
 
             return null;
         }
+
+        public void Lade_Anzeigedaten_Transfers()
+        {
+            AnzeigeDatan_Transfers = new List<Anzeigedatan>();
+
+            foreach (var transfer in transferList)
+            {
+                SQLiteCommand cmd;
+                SQLiteDataReader dr;
+                var query = "select (select stop_name from stops where stop_id = '"+transfer.FromStopId+"') as VonHaltestelle, (select stop_name from stops where stop_id = '"+transfer.ToStopId+"') as BisHaltestelle from stops";
+
+            
+                var sqlite_conn = new SQLiteConnection(sqLiteConnection);
+
+                sqlite_conn.Open();
+            
+                cmd = new SQLiteCommand(query, sqlite_conn);
+            
+                try
+                {
+                    dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        var item = new Anzeigedatan();
+                        item.VonHaltestelle = dr.GetValue(0).ToString();
+                        item.BisHaltestelle = dr.GetValue(1).ToString();
+                        item.ZeitInMinuten = transfer.MinTransferTime;
+                        
+                        AnzeigeDatan_Transfers.Add(item);
+                    }
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+        }
     }
 
     public class Transfers
@@ -188,5 +226,12 @@ namespace Entwicklertage_2024_1.Models
         public string FromStopId { get; set; }
         public string ToStopId { get; set; }
         public string MinTransferTime { get; set; }
+    }
+
+    public class Anzeigedatan
+    {
+        public string VonHaltestelle { get; set; }
+        public string BisHaltestelle { get; set; }
+        public string ZeitInMinuten { get; set; }
     }
 }
