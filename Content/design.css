@@ -1,0 +1,50 @@
+.header {
+    text-align: center;
+    padding: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: large;
+    border-left: 200px solid greenyellow;
+    border-right: 200px solid greenyellow;
+}
+
+.body {
+    font-family: Arial, Helvetica, sans-serif;
+    border-left: 200px solid greenyellow;
+    border-right: 200px solid greenyellow;
+    height: 100vh;
+}
+
+.listbox {
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.searchbox {
+    background-color: red;
+    border: 2px solid red;
+    border-radius: 10px;
+    font-size: medium;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: lightgray;
+    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid;
+}
+
+.table td, .table th {
+    border: 1px solid;
+}
+
+.table th {
+    text-align: center;
+    background-color: darkgray;
+}
+
+.table td {
+    height: 50px;
+    vertical-align: center;
+}
