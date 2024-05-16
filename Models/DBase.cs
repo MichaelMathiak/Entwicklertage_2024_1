@@ -16,6 +16,8 @@ namespace Entwicklertage_2024_1.Models
     public class DBase
     {
         
+        public List<Transfers> AnzeigeDatan_Transfers { get; set; }
+        
         private List<Transfers> transferList { get; set; }
         private List<Transfers> availableStops { get; set; }
         
@@ -119,6 +121,8 @@ namespace Entwicklertage_2024_1.Models
                 // keine Verbindung gefunden
                 return;
             }
+
+            AnzeigeDatan_Transfers = transferList;
 
             foreach (var stop in transferList)
             {
