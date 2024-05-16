@@ -104,7 +104,7 @@ namespace Entwicklertage_2024_1.Models
 
                     item.FromStopId = dr.GetValue(0).ToString();
                     item.ToStopId = dr.GetValue(1).ToString();
-                    item.MinTransferTime = dr.GetValue(2).ToString();
+                    item.MinTransferTime = (Convert.ToInt32(dr.GetValue(2)) / 60).ToString();
                                         
                     transferList.Add(item);
                 }
@@ -129,7 +129,7 @@ namespace Entwicklertage_2024_1.Models
 
                     item.FromStopId = dr.GetValue(0).ToString();
                     item.ToStopId = dr.GetValue(1).ToString();
-                    item.MinTransferTime = dr.GetValue(2).ToString();
+                    item.MinTransferTime = (Convert.ToInt32(dr.GetValue(2)) / 60).ToString();
                                         
                     transferList.Add(item);
                 }
@@ -144,6 +144,7 @@ namespace Entwicklertage_2024_1.Models
             
             if(transferList.Count == 0)
             {
+                AnzeigeDatan_Transfers = new List<Anzeigedatan>();
                 Anzeigedatan item = new Anzeigedatan();
                 item.ZeitInMinuten = "Kein Ziel gefunden";
                 item.VonHaltestelle = String.Empty;
